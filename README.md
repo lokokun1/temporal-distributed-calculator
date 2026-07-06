@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Temporal Distributed Calculator
 
 This project is a small Temporal-based distributed system packaged around a reusable Python worker SDK.
@@ -117,3 +118,7 @@ This implementation uses CPU utilization because it is simple to run locally wit
 ```bash
 bash scripts/cleanup.sh
 ```
+=======
+# temporal-distributed-calculator
+temporal-distributed-calculator
+>>>>>>> d724a07cdaec07502b90fad43d06bafbb82a2299
