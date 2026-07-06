@@ -1,0 +1,53 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: workflow-worker
+  namespace: temporal-calc
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: workflow-worker
+  template:
+    metadata:
+      labels:
+        app: workflow-worker
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "8080"
+        prometheus.io/path: "/metrics"
+    spec:
+      containers:
+        - name: worker
+          image: temporal-distributed-calculator:local
+          imagePullPolicy: IfNotPresent
+          command: ["python", "-m", "calculator.workflow_worker"]
+          env:
+            - name: TEMPORAL_ADDRESS
+              value: temporal.temporal-calc.svc.cluster.local:7233
+            - name: TASK_QUEUE
+              value: calculator-workflows
+            - name: WORKER_NAME
+              value: workflow-worker
+          ports:
+            - name: health
+              containerPort: 8080
+          resources:
+            requests:
+              cpu: 50m
+              memory: 128Mi
+            limits:
+              cpu: 500m
+              memory: 256Mi
+          readinessProbe:
+            httpGet:
+              path: /readyz
+              port: health
+            initialDelaySeconds: 5
+            periodSeconds: 5
+          livenessProbe:
+            httpGet:
+              path: /livez
+              port: health
+            initialDelaySeconds: 10
+            periodSeconds: 10

@@ -1,0 +1,32 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "temporal-distributed-calculator"
+version = "0.1.0"
+description = "Temporal-based distributed calculator with a reusable worker SDK."
+requires-python = ">=3.12"
+dependencies = [
+    "aiohttp>=3.9,<4",
+    "prometheus-client>=0.20,<1",
+    "temporalio>=1.7,<2",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8,<9",
+    "pytest-asyncio>=0.23,<1",
+    "ruff>=0.5,<1",
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"

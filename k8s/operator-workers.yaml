@@ -1,0 +1,269 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: add-worker
+  namespace: temporal-calc
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: add-worker
+  template:
+    metadata:
+      labels:
+        app: add-worker
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "8080"
+        prometheus.io/path: "/metrics"
+    spec:
+      containers:
+        - name: worker
+          image: temporal-distributed-calculator:local
+          imagePullPolicy: IfNotPresent
+          command: ["python", "-m", "calculator.operator_worker"]
+          env:
+            - name: TEMPORAL_ADDRESS
+              value: temporal.temporal-calc.svc.cluster.local:7233
+            - name: OPERATOR
+              value: "+"
+            - name: TASK_QUEUE
+              value: calculator-add
+            - name: WORKER_NAME
+              value: add-worker
+            - name: ACTIVITY_DELAY_MS
+              value: "50"
+          ports:
+            - name: health
+              containerPort: 8080
+          resources:
+            requests:
+              cpu: 50m
+              memory: 128Mi
+            limits:
+              cpu: 500m
+              memory: 256Mi
+          readinessProbe:
+            httpGet:
+              path: /readyz
+              port: health
+          livenessProbe:
+            httpGet:
+              path: /livez
+              port: health
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: subtract-worker
+  namespace: temporal-calc
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: subtract-worker
+  template:
+    metadata:
+      labels:
+        app: subtract-worker
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "8080"
+        prometheus.io/path: "/metrics"
+    spec:
+      containers:
+        - name: worker
+          image: temporal-distributed-calculator:local
+          imagePullPolicy: IfNotPresent
+          command: ["python", "-m", "calculator.operator_worker"]
+          env:
+            - name: TEMPORAL_ADDRESS
+              value: temporal.temporal-calc.svc.cluster.local:7233
+            - name: OPERATOR
+              value: "-"
+            - name: TASK_QUEUE
+              value: calculator-subtract
+            - name: WORKER_NAME
+              value: subtract-worker
+            - name: ACTIVITY_DELAY_MS
+              value: "50"
+          ports:
+            - name: health
+              containerPort: 8080
+          resources:
+            requests:
+              cpu: 50m
+              memory: 128Mi
+            limits:
+              cpu: 500m
+              memory: 256Mi
+          readinessProbe:
+            httpGet:
+              path: /readyz
+              port: health
+          livenessProbe:
+            httpGet:
+              path: /livez
+              port: health
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: multiply-worker
+  namespace: temporal-calc
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: multiply-worker
+  template:
+    metadata:
+      labels:
+        app: multiply-worker
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "8080"
+        prometheus.io/path: "/metrics"
+    spec:
+      containers:
+        - name: worker
+          image: temporal-distributed-calculator:local
+          imagePullPolicy: IfNotPresent
+          command: ["python", "-m", "calculator.operator_worker"]
+          env:
+            - name: TEMPORAL_ADDRESS
+              value: temporal.temporal-calc.svc.cluster.local:7233
+            - name: OPERATOR
+              value: "*"
+            - name: TASK_QUEUE
+              value: calculator-multiply
+            - name: WORKER_NAME
+              value: multiply-worker
+            - name: ACTIVITY_DELAY_MS
+              value: "50"
+          ports:
+            - name: health
+              containerPort: 8080
+          resources:
+            requests:
+              cpu: 50m
+              memory: 128Mi
+            limits:
+              cpu: 500m
+              memory: 256Mi
+          readinessProbe:
+            httpGet:
+              path: /readyz
+              port: health
+          livenessProbe:
+            httpGet:
+              path: /livez
+              port: health
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: divide-worker
+  namespace: temporal-calc
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: divide-worker
+  template:
+    metadata:
+      labels:
+        app: divide-worker
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "8080"
+        prometheus.io/path: "/metrics"
+    spec:
+      containers:
+        - name: worker
+          image: temporal-distributed-calculator:local
+          imagePullPolicy: IfNotPresent
+          command: ["python", "-m", "calculator.operator_worker"]
+          env:
+            - name: TEMPORAL_ADDRESS
+              value: temporal.temporal-calc.svc.cluster.local:7233
+            - name: OPERATOR
+              value: "/"
+            - name: TASK_QUEUE
+              value: calculator-divide
+            - name: WORKER_NAME
+              value: divide-worker
+            - name: ACTIVITY_DELAY_MS
+              value: "50"
+          ports:
+            - name: health
+              containerPort: 8080
+          resources:
+            requests:
+              cpu: 50m
+              memory: 128Mi
+            limits:
+              cpu: 500m
+              memory: 256Mi
+          readinessProbe:
+            httpGet:
+              path: /readyz
+              port: health
+          livenessProbe:
+            httpGet:
+              path: /livez
+              port: health
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: power-worker
+  namespace: temporal-calc
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: power-worker
+  template:
+    metadata:
+      labels:
+        app: power-worker
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "8080"
+        prometheus.io/path: "/metrics"
+    spec:
+      containers:
+        - name: worker
+          image: temporal-distributed-calculator:local
+          imagePullPolicy: IfNotPresent
+          command: ["python", "-m", "calculator.operator_worker"]
+          env:
+            - name: TEMPORAL_ADDRESS
+              value: temporal.temporal-calc.svc.cluster.local:7233
+            - name: OPERATOR
+              value: "^"
+            - name: TASK_QUEUE
+              value: calculator-power
+            - name: WORKER_NAME
+              value: power-worker
+            - name: ACTIVITY_DELAY_MS
+              value: "50"
+          ports:
+            - name: health
+              containerPort: 8080
+          resources:
+            requests:
+              cpu: 50m
+              memory: 128Mi
+            limits:
+              cpu: 500m
+              memory: 256Mi
+          readinessProbe:
+            httpGet:
+              path: /readyz
+              port: health
+          livenessProbe:
+            httpGet:
+              path: /livez
+              port: health
