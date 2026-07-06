@@ -1,13 +1,11 @@
-<<<<<<< HEAD
 # Temporal Distributed Calculator
 
 This project is a small Temporal-based distributed system packaged around a reusable Python worker SDK.
 
 It evaluates arithmetic expressions such as:
 
-```text
+text
 1 + 5^3 * (2 - 5)
-```
 
 The workflow parses the expression, respects precedence and associativity, and delegates each operator type to a separate Temporal task queue handled by a separate worker deployment.
 
@@ -121,4 +119,3 @@ bash scripts/cleanup.sh
 =======
 # temporal-distributed-calculator
 temporal-distributed-calculator
->>>>>>> d724a07cdaec07502b90fad43d06bafbb82a2299
