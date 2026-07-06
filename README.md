@@ -116,6 +116,3 @@ This implementation uses CPU utilization because it is simple to run locally wit
 ```bash
 bash scripts/cleanup.sh
 ```
-
-# temporal-distributed-calculator
-temporal-distributed-calculator
